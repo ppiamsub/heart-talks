@@ -32,26 +32,15 @@ export async function POST(request: Request) {
         ? payload.responderName.trim().slice(0, 40) || "ยู"
         : "ยู";
 
-    if (process.env.SUPABASE_URL && process.env.SUPABASE_PUBLISHABLE_KEY) {
-      const { error } = await getSupabaseServerClient()
-        .from("answer_submissions")
-        .insert({
-          responder_name: responderName,
-          answers_json: answers,
-          consent_version: "v1",
-        });
-
-      if (error) throw error;
-    } else {
-      const { getPrisma } = await import("../../../lib/prisma");
-      await getPrisma().answerSubmission.create({
-        data: {
-          responderName,
-          answersJson: answers,
-          consentVersion: "v1",
-        },
+    const { error } = await getSupabaseServerClient()
+      .from("answer_submissions")
+      .insert({
+        responder_name: responderName,
+        answers_json: answers,
+        consent_version: "v1",
       });
-    }
+
+    if (error) throw error;
 
     return Response.json({ ok: true }, { status: 201 });
   } catch (error) {
