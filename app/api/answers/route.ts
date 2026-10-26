@@ -1,4 +1,4 @@
-import { getPrisma } from "../../../lib/prisma";
+import { getSupabaseServerClient } from "../../../lib/supabase-admin";
 
 type SubmittedAnswer = { question?: unknown; answer?: unknown };
 
@@ -27,22 +27,22 @@ export async function POST(request: Request) {
       return Response.json({ error: "คำตอบไม่ครบ" }, { status: 400 });
     }
 
-    const submission = await getPrisma().answerSubmission.create({
-      data: {
-        responderName:
+    const { error } = await getSupabaseServerClient()
+      .from("answer_submissions")
+      .insert({
+        responder_name:
           typeof payload.responderName === "string"
             ? payload.responderName.trim().slice(0, 40) || "ยู"
             : "ยู",
-        answersJson: answers,
-        consentVersion: "v1",
-      },
-      select: { id: true },
-    });
+        answers_json: answers,
+        consent_version: "v1",
+      });
 
-    return Response.json(
-      { ok: true, submissionId: submission.id.toString() },
-      { status: 201 },
-    );
+    if (error) {
+      throw error;
+    }
+
+    return Response.json({ ok: true }, { status: 201 });
   } catch (error) {
     console.error("Failed to save answer submission", error);
     return Response.json({ error: "บันทึกคำตอบไม่สำเร็จ" }, { status: 500 });

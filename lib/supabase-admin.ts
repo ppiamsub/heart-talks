@@ -1,15 +1,15 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
 
-export function getSupabaseAdmin() {
+export function getSupabaseServerClient() {
   const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
+  const supabasePublishableKey = process.env.SUPABASE_PUBLISHABLE_KEY;
 
-  if (!supabaseUrl || !supabaseSecretKey) {
+  if (!supabaseUrl || !supabasePublishableKey) {
     throw new Error("Supabase server environment variables are not configured");
   }
 
-  return createClient(supabaseUrl, supabaseSecretKey, {
+  return createClient(supabaseUrl, supabasePublishableKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
