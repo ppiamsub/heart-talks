@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff8f3">
+  <title>ใจตรงกันไหม?</title>
+  <meta name="description" content="เกมคำถามน่ารัก ๆ สำหรับคนสองคน ตอบ สลับกันให้คะแนน และรู้จักกันมากขึ้น">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <main class="shell">
+    <header class="brand" aria-label="ชื่อเกม">
+      <span class="brand-mark">♡</span>
+      <span>ใจตรงกันไหม?</span>
+    </header>
+
+    <section id="setup" class="screen active" aria-labelledby="setup-title">
+      <div class="hero-copy">
+        <p class="eyebrow">A LITTLE GAME FOR TWO</p>
+        <h1 id="setup-title">คืนนี้<br><em>รู้จักกันอีกนิด</em></h1>
+        <p class="intro">ผลัดกันตอบคำถาม แล้วให้อีกคนให้คะแนนความประทับใจ ไม่มีแพ้ชนะ มีแต่เรื่องที่อยากฟังต่อ</p>
+      </div>
+
+      <form id="setup-form" class="setup-card">
+        <div class="name-grid">
+          <label>คนที่ 1<input id="player-one" maxlength="18" placeholder="ชื่อของคุณ" required></label>
+          <label>คนที่ 2<input id="player-two" maxlength="18" placeholder="ชื่อของเธอ" required></label>
+        </div>
+        <fieldset>
+          <legend>คืนนี้อยากคุยแบบไหน?</legend>
+          <div class="modes">
+            <label class="mode"><input type="radio" name="mode" value="cute" checked><span><b>ละมุน</b><small>ยิ้มง่าย เขินนิด ๆ</small></span></label>
+            <label class="mode"><input type="radio" name="mode" value="deep"><span><b>ลึกขึ้น</b><small>คุยเรื่องใจจริง ๆ</small></span></label>
+            <label class="mode"><input type="radio" name="mode" value="mix"><span><b>เซอร์ไพรส์</b><small>ผสมทุกอารมณ์</small></span></label>
+          </div>
+        </fieldset>
+        <label class="round-label">จำนวนคำถาม <output id="round-output">8</output>
+          <input id="round-count" type="range" min="5" max="12" value="8">
+        </label>
+        <button class="primary" type="submit">เริ่มเปิดใจ <span>→</span></button>
+        <p class="privacy">คำตอบจะอยู่แค่ในเครื่องนี้เท่านั้น</p>
+      </form>
+    </section>
+
+    <section id="game" class="screen" aria-live="polite">
+      <div class="game-top">
+        <button id="quit" class="icon-button" aria-label="กลับหน้าแรก">←</button>
+        <div class="progress-wrap"><span id="progress-text">คำถาม 1 / 8</span><div class="progress"><i id="progress-bar"></i></div></div>
+        <span id="total-score" class="score-pill">♡ 0</span>
+      </div>
+
+      <article class="question-card">
+        <div id="category" class="category">ละมุน</div>
+        <p id="turn-label" class="turn-label">ตาของคุณ</p>
+        <h2 id="question">ถ้าเราได้หายตัวไปหนึ่งวัน อยากพากันไปไหน?</h2>
+        <div id="answer-stage">
+          <textarea id="answer" rows="4" maxlength="240" placeholder="เล่าให้อีกคนฟังตรงนี้…"></textarea>
+          <div class="answer-footer"><span id="char-count">0 / 240</span><button id="reveal" class="primary" type="button">ตอบแล้ว ♡</button></div>
+        </div>
+
+        <div id="rating-stage" class="hidden">
+          <div class="answer-note"><span id="answerer-name">คำตอบของคุณ</span><p id="answer-display"></p></div>
+          <p class="rate-title"><b id="rater-name">อีกคน</b> ให้กี่หัวใจดี?</p>
+          <div id="hearts" class="hearts" role="radiogroup" aria-label="ให้คะแนน 1 ถึง 5 หัวใจ">
+            <button type="button" data-value="1" aria-label="1 หัวใจ">♡</button>
+            <button type="button" data-value="2" aria-label="2 หัวใจ">♡</button>
+            <button type="button" data-value="3" aria-label="3 หัวใจ">♡</button>
+            <button type="button" data-value="4" aria-label="4 หัวใจ">♡</button>
+            <button type="button" data-value="5" aria-label="5 หัวใจ">♡</button>
+          </div>
+          <p id="rating-hint" class="rating-hint">แตะหัวใจเพื่อให้คะแนน</p>
+          <button id="next" class="primary hidden" type="button">คำถามถัดไป <span>→</span></button>
+        </div>
+      </article>
+      <p class="tiny-tip">ทิป: ถ้าคำตอบน่าสนใจ อย่าเพิ่งรีบไปข้อต่อไปนะ</p>
+    </section>
+
+    <section id="result" class="screen result-screen">
+      <div id="result-burst" class="result-burst">♡</div>
+      <p class="eyebrow">TONIGHT'S LITTLE SCORE</p>
+      <h2><span id="result-score">34</span><small> / <span id="max-score">40</span> หัวใจ</small></h2>
+      <h3 id="result-title">คู่นี้มีเรื่องคุยกันอีกเยอะเลย</h3>
+      <p id="result-copy">คะแนนเป็นแค่ข้ออ้าง ที่จริงเราอยากให้คืนนี้ได้ฟังกันนานขึ้นต่างหาก</p>
+      <div id="memory-list" class="memory-list"></div>
+      <div class="result-actions">
+        <button id="again" class="primary" type="button">เล่นอีกรอบ</button>
+        <button id="copy-result" class="secondary" type="button">แชร์คะแนน</button>
+      </div>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
