@@ -27,6 +27,15 @@ export default function Home() {
   const [notice, setNotice] = useState("");
   const [isAdvancing, setIsAdvancing] = useState(false);
 
+  const catMood = answers.length >= 7 ? "ecstatic" : answers.length >= 4 ? "happy" : answers.length >= 1 ? "warming" : "shy";
+  const catFace = catMood === "ecstatic" ? "✦ ᴗ ✦" : catMood === "happy" ? "ᵔ ᵕ ᵔ" : catMood === "warming" ? "• ◡ •" : "• ᴗ •";
+  const happiness = Math.round((answers.length / questions.length) * 100);
+  const companionMessage = isAdvancing
+    ? answers.length >= 7 ? "เย้! แมวมีความสุขที่สุดเลย!" : "เก่งมาก! แมวยิ้มกว้างขึ้นแล้ว"
+    : draft
+      ? answers.length >= 4 ? "เล่าต่อได้เลย แมวชอบฟังมาก ♡" : "อื้อฮึ… แมวฟังอยู่นะ"
+      : answers.length >= 7 ? "อีกนิดเดียวก็ถึงเส้นชัยแล้ว!" : answers.length >= 4 ? "แมวเริ่มยิ้มไม่หุบแล้วนะ" : answers.length ? "ได้รู้จักยูเพิ่มอีกนิดแล้ว ♡" : "ค่อย ๆ คิดได้เลย เมี้ยว~";
+
   function startGame() {
     setIndex(0);
     setDraft("");
@@ -169,11 +178,14 @@ export default function Home() {
             <div className={`stage-clear ${isAdvancing ? "show" : ""}`} aria-live="polite">
               <b>STAGE CLEAR!</b><span>+1 ♥</span>
             </div>
-            <aside className={`quest-companion ${draft ? "is-listening" : ""} ${isAdvancing ? "is-celebrating" : ""}`} aria-label="แมวผู้ช่วยกำลังให้กำลังใจ">
-              <div className="companion-speech">{isAdvancing ? "เก่งมาก! ไปด่านต่อไปกัน" : draft ? "อื้อฮึ… แมวฟังอยู่นะ" : "ค่อย ๆ คิดได้เลย เมี้ยว~"}</div>
+            <aside className={`quest-companion mood-${catMood} ${draft ? "is-listening" : ""} ${isAdvancing ? "is-celebrating" : ""}`} aria-label={`แมวผู้ช่วยมีความสุข ${happiness} เปอร์เซ็นต์`}>
+              <div className="companion-speech">
+                <span>{companionMessage}</span>
+                <div className="cat-joy"><small>ความสุขแมว</small><div><i style={{ width: `${Math.max(8, happiness)}%` }} /></div><b>{answers.length}/9 ♥</b></div>
+              </div>
               <div className="mini-cat" aria-hidden="true">
                 <i className="mini-tail" /><i className="mini-body" />
-                <i className="mini-head"><b className="mini-ear left" /><b className="mini-ear right" /><span>• ᴗ •</span></i>
+                <i className="mini-head"><b className="mini-ear left" /><b className="mini-ear right" /><span>{catFace}</span><em className="mini-cheek left" /><em className="mini-cheek right" /></i>
                 <i className="mini-paw left" /><i className="mini-paw right" />
               </div>
               <div className="companion-shadow" aria-hidden="true" />
@@ -196,6 +208,16 @@ export default function Home() {
               <span><b>♥ 9</b> หัวใจ</span><span><b>★</b> คนเก่ง</span><span><b>∞</b> ความน่ารัก</span>
             </div>
 
+            <div className={`letter-quest ${sendState === "sending" ? "is-sending" : ""} ${sendState === "sent" ? "is-delivered" : ""}`} aria-label={sendState === "sent" ? "แมวมอบจดหมายให้หมาเรียบร้อยแล้ว" : "แมวถือจดหมายรอมอบให้หมาที่เส้นชัย"}>
+              <span className="finish-sign">FINISH</span>
+              <div className="delivery-ground" />
+              <div className="delivery-cat" aria-hidden="true">🐱</div>
+              <div className="delivery-letter" aria-hidden="true">💌</div>
+              <div className="delivery-dog" aria-hidden="true">🐶</div>
+              <div className="delivery-heart" aria-hidden="true">♥</div>
+              <p>{sendState === "sent" ? "จดหมายถึงมือหมาแล้ว ♡" : sendState === "sending" ? "แมวกำลังวิ่งไปส่งจดหมาย…" : "แมวถือจดหมายรออยู่ที่เส้นชัย"}</p>
+            </div>
+
             <div className="answer-list">
               {answers.map((item, answerIndex) => (
                 <article className="result-answer" key={item.question}>
@@ -215,11 +237,6 @@ export default function Home() {
               </button>
               {sendState === "sent" && (
                 <div className="sent-celebration" aria-live="polite">
-                  <div className="hug-scene" aria-label="แมวกับหมาค่อย ๆ เข้ามากอดกัน">
-                    <span className="hug-cat" aria-hidden="true">🐱</span>
-                    <span className="hug-heart" aria-hidden="true">♥</span>
-                    <span className="hug-dog" aria-hidden="true">🐶</span>
-                  </div>
                   <p className="success-message">ส่งเรียบร้อยแล้ว ขอบคุณนะยู 🐾</p>
                 </div>
               )}
