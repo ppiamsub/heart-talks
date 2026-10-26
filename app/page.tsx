@@ -90,15 +90,19 @@ export default function Home() {
       <div className="leaf leaf-a" />
       <div className="leaf leaf-b" />
       <main className="shell">
-        <header className="brand"><span className="paw">●</span> little cat note</header>
+        <header className="brand"><span className="paw">●</span> little cat quest <span className="online-dot">online</span></header>
 
         {screen === "welcome" && (
           <section className="welcome screen active">
             <div className="welcome-copy">
+              <div className="quest-kicker"><span>COZY QUEST</span><b>9 STAGES</b></div>
               <p className="eyebrow">A TINY GAME FOR ONE SPECIAL GIRL</p>
               <h1><small>กราบสวัสดี</small><br />คุณ<em>บอลลูน</em></h1>
-              <p className="intro">มีแมวตัวหนึ่งคาบ 9 คำถามมาให้ยู ตอบตามใจได้เลย ไม่มีถูกผิด และไม่ต้องให้คะแนนอะไรทั้งนั้นนะ</p>
-              <button className="primary welcome-button" onClick={startGame}>เปิดซองคำถาม <span>→</span></button>
+              <p className="intro">มีแมวตัวหนึ่งคาบภารกิจ 9 ด่านมาให้ยู ตอบตามใจได้เลย ไม่มีถูกผิด ผ่านแต่ละด่านแล้วเก็บหัวใจไปจนถึงเส้นชัยนะ</p>
+              <div className="quest-stats" aria-label="รายละเอียดเกม">
+                <span><b>9</b> ด่าน</span><span><b>∞</b> เวลา</span><span><b>♡</b> ไม่มีแพ้</span>
+              </div>
+              <button className="primary welcome-button" onClick={startGame}>เริ่มภารกิจ <span>▶</span></button>
               <p className="privacy">คำตอบจะส่งให้คนทำเว็บก็ต่อเมื่อยูกดยืนยันตอนจบ</p>
             </div>
 
@@ -111,7 +115,7 @@ export default function Home() {
                 <div className="ear left" /><div className="ear right" />
                 <div className="cat-face"><i className="eye" /><i className="eye" /><b>ᴗ</b></div>
               </div>
-              <div className="note">for you ♡</div><div className="ground" />
+              <div className="note"><small>NEW QUEST!</small>for you ♡</div><div className="ground" />
             </div>
             <div className="question-preview"><span>เดตในฝัน</span><span>ของกินฮีลใจ</span><span>วันที่เหนื่อย</span><span>คำถามสลับร่าง</span></div>
           </section>
@@ -121,29 +125,49 @@ export default function Home() {
           <section className="game screen active">
             <div className="game-top">
               <button className="round-button" aria-label="กลับหน้าแรก" onClick={() => setScreen("welcome")}>←</button>
-              <div className="progress-wrap"><span>คำถาม {index + 1} จาก {questions.length}</span><div className="progress"><i style={{ width: `${((index + 1) / questions.length) * 100}%` }} /></div></div>
-              <span className="score-pill">🐾 ยู</span>
+              <div className="progress-wrap"><span>STAGE {String(index + 1).padStart(2, "0")} / {String(questions.length).padStart(2, "0")}</span><div className="progress"><i style={{ width: `${((index + 1) / questions.length) * 100}%` }} /></div></div>
+              <span className="score-pill">♥ {answers.length}</span>
             </div>
-            <article className="question-card">
+
+            <nav className="quest-map" aria-label="เส้นทางคำถาม">
+              {questions.map((_, questionIndex) => (
+                <span
+                  className={questionIndex < index ? "done" : questionIndex === index ? "current" : "locked"}
+                  key={questionIndex}
+                  aria-label={`ด่าน ${questionIndex + 1}${questionIndex < index ? " ผ่านแล้ว" : questionIndex === index ? " ด่านปัจจุบัน" : " ยังไม่ถึง"}`}
+                >
+                  {questionIndex < index ? "✓" : questionIndex + 1}
+                </span>
+              ))}
+            </nav>
+
+            <article className="question-card" key={index}>
+              <span className="quest-label">MAIN QUEST</span>
               <div className="card-cat"><span>ฅ</span><b>•ﻌ•</b><span>ฅ</span></div>
-              <p className="question-number">คำถามที่ {String(index + 1).padStart(2, "0")}</p>
+              <p className="question-number">ภารกิจที่ {String(index + 1).padStart(2, "0")}</p>
               <h2>{questions[index]}</h2>
               <label className="sr-only" htmlFor="answer">คำตอบของยู</label>
               <textarea id="answer" rows={5} maxLength={300} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="ยูเขียนคำตอบตรงนี้ได้เลย…" autoFocus />
-              <div className="answer-footer"><span>{draft.length} / 300</span><button className="primary" onClick={submitAnswer}>{index === questions.length - 1 ? "ดูสรุป →" : "ข้อต่อไป →"}</button></div>
+              <div className="answer-footer"><span className="typing-score">✦ {draft.length} / 300</span><button className="primary" onClick={submitAnswer}>{index === questions.length - 1 ? "เข้าเส้นชัย ✦" : "ผ่านด่านนี้ →"}</button></div>
               {notice && <p className="inline-notice" role="status">{notice}</p>}
             </article>
-            <p className="cat-tip">🐾 แมวบอกว่า: ค่อย ๆ ตอบ ไม่ต้องรีบนะ</p>
+            <p className="cat-tip"><span>🐾</span> คำใบ้จากแมว: ค่อย ๆ ตอบ ไม่มีจับเวลานะ</p>
           </section>
         )}
 
         {screen === "result" && (
           <section className="result-screen screen active">
+            <div className="confetti" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></div>
+            <p className="complete-badge">QUEST COMPLETE!</p>
             <div className="result-cat">ฅ(˶ᵔ ᵕ ᵔ˶)ฅ</div>
             <p className="eyebrow">YOUR LITTLE HEART NOTE</p>
             <h2>9<small> / 9 คำตอบ</small></h2>
             <h3>แมวเก็บทุกคำตอบของยูไว้แล้ว</h3>
             <p>อ่านทวนได้ก่อน แล้วค่อยเลือกว่าจะส่งคำตอบให้ไอนะ</p>
+
+            <div className="reward-row" aria-label="รางวัลที่ได้รับ">
+              <span><b>♥ 9</b> หัวใจ</span><span><b>★</b> คนเก่ง</span><span><b>∞</b> ความน่ารัก</span>
+            </div>
 
             <div className="answer-list">
               {answers.map((item, answerIndex) => (
