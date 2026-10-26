@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const questions = [
   "วันนี้มีเรื่องเล็ก ๆ อะไรที่ทำให้ยูยิ้มได้บ้าง?",
@@ -26,6 +26,7 @@ export default function Home() {
   const [sendState, setSendState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [notice, setNotice] = useState("");
   const [isAdvancing, setIsAdvancing] = useState(false);
+  const deliverySceneRef = useRef<HTMLDivElement>(null);
 
   const catMood = answers.length >= 7 ? "ecstatic" : answers.length >= 4 ? "happy" : answers.length >= 1 ? "warming" : "shy";
   const catFace = catMood === "ecstatic" ? "✦ ᴗ ✦" : catMood === "happy" ? "ᵔ ᵕ ᵔ" : catMood === "warming" ? "• ◡ •" : "• ᴗ •";
@@ -79,6 +80,9 @@ export default function Home() {
   async function sendAnswers() {
     if (!consent || sendState === "sending" || sendState === "sent") return;
     setSendState("sending");
+    window.setTimeout(() => {
+      deliverySceneRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 80);
     try {
       const response = await fetch("/api/answers", {
         method: "POST",
@@ -208,16 +212,6 @@ export default function Home() {
               <span><b>♥ 9</b> หัวใจ</span><span><b>★</b> คนเก่ง</span><span><b>∞</b> ความน่ารัก</span>
             </div>
 
-            <div className={`letter-quest ${sendState === "sending" ? "is-sending" : ""} ${sendState === "sent" ? "is-delivered" : ""}`} aria-label={sendState === "sent" ? "แมวมอบจดหมายให้หมาเรียบร้อยแล้ว" : "แมวถือจดหมายรอมอบให้หมาที่เส้นชัย"}>
-              <span className="finish-sign">FINISH</span>
-              <div className="delivery-ground" />
-              <div className="delivery-cat" aria-hidden="true">🐱</div>
-              <div className="delivery-letter" aria-hidden="true">💌</div>
-              <div className="delivery-dog" aria-hidden="true">🐶</div>
-              <div className="delivery-heart" aria-hidden="true">♥</div>
-              <p>{sendState === "sent" ? "จดหมายถึงมือหมาแล้ว ♡" : sendState === "sending" ? "แมวกำลังวิ่งไปส่งจดหมาย…" : "แมวถือจดหมายรออยู่ที่เส้นชัย"}</p>
-            </div>
-
             <div className="answer-list">
               {answers.map((item, answerIndex) => (
                 <article className="result-answer" key={item.question}>
@@ -241,6 +235,16 @@ export default function Home() {
                 </div>
               )}
               {sendState === "error" && <p className="error-message">ส่งไม่สำเร็จ ลองกดอีกครั้งนะ</p>}
+            </div>
+
+            <div ref={deliverySceneRef} className={`letter-quest ${sendState === "sending" ? "is-sending" : ""} ${sendState === "sent" ? "is-delivered" : ""}`} aria-label={sendState === "sent" ? "แมวมอบจดหมายให้หมาเรียบร้อยแล้ว" : "แมวถือจดหมายรอมอบให้หมาที่เส้นชัย"}>
+              <span className="finish-sign">FINISH</span>
+              <div className="delivery-ground" />
+              <div className="delivery-cat" aria-hidden="true">🐱</div>
+              <div className="delivery-letter" aria-hidden="true">💌</div>
+              <div className="delivery-dog" aria-hidden="true">🐶</div>
+              <div className="delivery-heart" aria-hidden="true">♥</div>
+              <p>{sendState === "sent" ? "จดหมายถึงมือหมาแล้ว ♡" : sendState === "sending" ? "แมวกำลังวิ่งไปส่งจดหมาย…" : "แมวถือจดหมายรออยู่ที่เส้นชัย"}</p>
             </div>
 
             <div className="result-actions">
