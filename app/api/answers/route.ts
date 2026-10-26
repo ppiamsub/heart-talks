@@ -1,4 +1,4 @@
-import { prisma } from "../../../lib/prisma";
+import { getPrisma } from "../../../lib/prisma";
 
 type SubmittedAnswer = { question?: unknown; answer?: unknown };
 
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "คำตอบไม่ครบ" }, { status: 400 });
     }
 
-    const submission = await prisma.answerSubmission.create({
+    const submission = await getPrisma().answerSubmission.create({
       data: {
         responderName:
           typeof payload.responderName === "string"
