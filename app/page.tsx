@@ -25,6 +25,7 @@ export default function Home() {
   const [consent, setConsent] = useState(false);
   const [sendState, setSendState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [notice, setNotice] = useState("");
+  const [isAdvancing, setIsAdvancing] = useState(false);
 
   function startGame() {
     setIndex(0);
@@ -33,11 +34,13 @@ export default function Home() {
     setConsent(false);
     setSendState("idle");
     setNotice("");
+    setIsAdvancing(false);
     setScreen("game");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function submitAnswer() {
+    if (isAdvancing) return;
     const answer = draft.trim();
     if (!answer) {
       setNotice("เขียนสักนิดก่อนนะยู 🐾");
@@ -46,17 +49,22 @@ export default function Home() {
     const nextAnswers = [...answers, { question: questions[index], answer }];
     setAnswers(nextAnswers);
     setNotice("");
-    setDraft("");
-    if (index === questions.length - 1) {
-      setScreen("result");
-      try {
-        localStorage.setItem("you-little-note", JSON.stringify({ answers: nextAnswers }));
-      } catch {}
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      setIndex(index + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    setIsAdvancing(true);
+
+    window.setTimeout(() => {
+      setDraft("");
+      setIsAdvancing(false);
+      if (index === questions.length - 1) {
+        setScreen("result");
+        try {
+          localStorage.setItem("you-little-note", JSON.stringify({ answers: nextAnswers }));
+        } catch {}
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        setIndex(index + 1);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }, 720);
   }
 
   async function sendAnswers() {
@@ -123,6 +131,10 @@ export default function Home() {
 
         {screen === "game" && (
           <section className="game screen active">
+            <div className="game-ambience" aria-hidden="true">
+              <i className="cloud cloud-one" /><i className="cloud cloud-two" />
+              <i className="float-star star-one">✦</i><i className="float-star star-two">✧</i><i className="float-star star-three">✦</i>
+            </div>
             <div className="game-top">
               <button className="round-button" aria-label="กลับหน้าแรก" onClick={() => setScreen("welcome")}>←</button>
               <div className="progress-wrap"><span>STAGE {String(index + 1).padStart(2, "0")} / {String(questions.length).padStart(2, "0")}</span><div className="progress"><i style={{ width: `${((index + 1) / questions.length) * 100}%` }} /></div></div>
@@ -141,16 +153,31 @@ export default function Home() {
               ))}
             </nav>
 
-            <article className="question-card" key={index}>
+            <article className={`question-card ${isAdvancing ? "is-cleared" : ""}`} key={index}>
               <span className="quest-label">MAIN QUEST</span>
               <div className="card-cat"><span>ฅ</span><b>•ﻌ•</b><span>ฅ</span></div>
               <p className="question-number">ภารกิจที่ {String(index + 1).padStart(2, "0")}</p>
               <h2>{questions[index]}</h2>
               <label className="sr-only" htmlFor="answer">คำตอบของยู</label>
-              <textarea id="answer" rows={5} maxLength={300} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="ยูเขียนคำตอบตรงนี้ได้เลย…" autoFocus />
-              <div className="answer-footer"><span className="typing-score">✦ {draft.length} / 300</span><button className="primary" onClick={submitAnswer}>{index === questions.length - 1 ? "เข้าเส้นชัย ✦" : "ผ่านด่านนี้ →"}</button></div>
+              <div className={`answer-zone ${draft ? "has-answer" : ""}`}>
+                <textarea id="answer" rows={5} maxLength={300} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="ยูเขียนคำตอบตรงนี้ได้เลย…" autoFocus disabled={isAdvancing} />
+                <div className="typing-hearts" aria-hidden="true"><i>♥</i><i>♥</i><i>♥</i></div>
+              </div>
+              <div className="answer-footer"><span className="typing-score">✦ {draft.length} / 300</span><button className="primary" onClick={submitAnswer} disabled={isAdvancing}>{isAdvancing ? "ผ่านแล้ว! ♥" : index === questions.length - 1 ? "เข้าเส้นชัย ✦" : "ผ่านด่านนี้ →"}</button></div>
               {notice && <p className="inline-notice" role="status">{notice}</p>}
             </article>
+            <div className={`stage-clear ${isAdvancing ? "show" : ""}`} aria-live="polite">
+              <b>STAGE CLEAR!</b><span>+1 ♥</span>
+            </div>
+            <aside className={`quest-companion ${draft ? "is-listening" : ""} ${isAdvancing ? "is-celebrating" : ""}`} aria-label="แมวผู้ช่วยกำลังให้กำลังใจ">
+              <div className="companion-speech">{isAdvancing ? "เก่งมาก! ไปด่านต่อไปกัน" : draft ? "อื้อฮึ… แมวฟังอยู่นะ" : "ค่อย ๆ คิดได้เลย เมี้ยว~"}</div>
+              <div className="mini-cat" aria-hidden="true">
+                <i className="mini-tail" /><i className="mini-body" />
+                <i className="mini-head"><b className="mini-ear left" /><b className="mini-ear right" /><span>• ᴗ •</span></i>
+                <i className="mini-paw left" /><i className="mini-paw right" />
+              </div>
+              <div className="companion-shadow" aria-hidden="true" />
+            </aside>
             <p className="cat-tip"><span>🐾</span> คำใบ้จากแมว: ค่อย ๆ ตอบ ไม่มีจับเวลานะ</p>
           </section>
         )}
