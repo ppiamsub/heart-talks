@@ -1,0 +1,20 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model AnswerSubmission {
+  id             BigInt   @id @default(autoincrement())
+  responderName  String   @default("ยู") @map("responder_name")
+  answersJson    Json     @map("answers_json")
+  consentVersion String   @default("v1") @map("consent_version")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("answer_submissions")
+}

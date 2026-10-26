@@ -96,7 +96,7 @@ export default function Home() {
           <section className="welcome screen active">
             <div className="welcome-copy">
               <p className="eyebrow">A TINY GAME FOR ONE SPECIAL GIRL</p>
-              <h1><small>สวัสดีค่ะ</small><br />คุณบอลลูน<em>คนสวย</em></h1>
+              <h1><small>กราบสวัสดี</small><br />คุณ<em>บอลลูน</em></h1>
               <p className="intro">มีแมวตัวหนึ่งคาบ 9 คำถามมาให้ยู ตอบตามใจได้เลย ไม่มีถูกผิด และไม่ต้องให้คะแนนอะไรทั้งนั้นนะ</p>
               <button className="primary welcome-button" onClick={startGame}>เปิดซองคำถาม <span>→</span></button>
               <p className="privacy">คำตอบจะส่งให้คนทำเว็บก็ต่อเมื่อยูกดยืนยันตอนจบ</p>

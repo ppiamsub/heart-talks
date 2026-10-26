@@ -1,5 +1,4 @@
-import { getDb } from "../../../db";
-import { answerSubmissions } from "../../../db/schema";
+import { prisma } from "../../../lib/prisma";
 
 type SubmittedAnswer = { question?: unknown; answer?: unknown };
 
@@ -28,18 +27,24 @@ export async function POST(request: Request) {
       return Response.json({ error: "คำตอบไม่ครบ" }, { status: 400 });
     }
 
-    const db = getDb();
-    const [submission] = await db
-      .insert(answerSubmissions)
-      .values({
-        responderName: typeof payload.responderName === "string" ? payload.responderName.trim().slice(0, 40) || "ยู" : "ยู",
-        answersJson: JSON.stringify(answers),
+    const submission = await prisma.answerSubmission.create({
+      data: {
+        responderName:
+          typeof payload.responderName === "string"
+            ? payload.responderName.trim().slice(0, 40) || "ยู"
+            : "ยู",
+        answersJson: answers,
         consentVersion: "v1",
-      })
-      .returning({ id: answerSubmissions.id });
+      },
+      select: { id: true },
+    });
 
-    return Response.json({ ok: true, submissionId: submission.id }, { status: 201 });
-  } catch {
+    return Response.json(
+      { ok: true, submissionId: submission.id.toString() },
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("Failed to save answer submission", error);
     return Response.json({ error: "บันทึกคำตอบไม่สำเร็จ" }, { status: 500 });
   }
 }
