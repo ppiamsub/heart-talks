@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#eef1df">
-  <title>คำถามถึง Balloon 🐾</title>
-  <meta name="description" content="10 คำถามน่ารัก ๆ ที่ทำมาให้ Balloon คนเดียว">
+  <title>คำถามถึงยู 🐾</title>
+  <meta name="description" content="9 คำถามน่ารัก ๆ ที่ทำมาให้ยูคนเดียว">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,8 +16,8 @@
     <section id="welcome" class="screen active">
       <div class="welcome-copy">
         <p class="eyebrow">A TINY GAME FOR ONE SPECIAL GIRL</p>
-        <h1>10 คำถาม<br>ถึง <em>Balloon</em></h1>
-        <p class="intro">มีแมวตัวหนึ่งคาบคำถามมาให้ ตอบตามใจได้เลย ไม่มีถูกผิด แล้วให้หัวใจว่าคำถามนั้นโดนใจแค่ไหนนะ</p>
+        <h1><small>สวัสดีค่ะ</small><br>คุณบอลลูน<em>คนสวย</em></h1>
+        <p class="intro">มีแมวตัวหนึ่งคาบ 9 คำถามมาให้ยู ตอบตามใจได้เลย ไม่มีถูกผิด และไม่ต้องให้คะแนนอะไรทั้งนั้นนะ</p>
         <button id="start" class="primary">เปิดซองคำถาม <span>→</span></button>
         <p class="privacy">คำตอบเก็บอยู่ในเครื่องนี้เท่านั้น</p>
       </div>
@@ -31,37 +31,28 @@
           <div class="ear left"></div><div class="ear right"></div>
           <div class="cat-face"><i class="eye"></i><i class="eye"></i><b>ᴗ</b></div>
         </div>
-        <div class="note">for Balloon ♡</div>
+        <div class="note">for you ♡</div>
         <div class="ground"></div>
       </div>
       <div class="question-preview">
-        <span>เดตในฝัน</span><span>ของกินฮีลใจ</span><span>วันที่เหนื่อย</span><span>ข้อความลับ</span>
+        <span>เดตในฝัน</span><span>ของกินฮีลใจ</span><span>วันที่เหนื่อย</span><span>คำถามสลับร่าง</span>
       </div>
     </section>
 
     <section id="game" class="screen">
       <div class="game-top">
         <button id="home" class="round-button" aria-label="กลับหน้าแรก">←</button>
-        <div class="progress-wrap"><span id="progress-text">คำถาม 1 จาก 10</span><div class="progress"><i id="progress-bar"></i></div></div>
-        <span id="score-pill" class="score-pill">♥ 0</span>
+        <div class="progress-wrap"><span id="progress-text">คำถาม 1 จาก 9</span><div class="progress"><i id="progress-bar"></i></div></div>
+        <span class="score-pill">🐾 ยู</span>
       </div>
       <article class="question-card">
         <div class="card-cat"><span>ฅ</span><b>•ﻌ•</b><span>ฅ</span></div>
         <p id="question-number" class="question-number">คำถามที่ 01</p>
         <h2 id="question"></h2>
         <div id="answer-stage">
-          <label class="sr-only" for="answer">คำตอบของ Balloon</label>
-          <textarea id="answer" rows="5" maxlength="300" placeholder="Balloon เขียนคำตอบตรงนี้ได้เลย…"></textarea>
-          <div class="answer-footer"><span id="char-count">0 / 300</span><button id="answer-done" class="primary">ตอบแล้ว</button></div>
-        </div>
-        <div id="rating-stage" class="hidden">
-          <div class="answer-note"><small>คำตอบของ Balloon</small><p id="answer-display"></p></div>
-          <p class="rate-title">คำถามนี้โดนใจแค่ไหน?</p>
-          <div id="hearts" class="hearts" role="radiogroup" aria-label="ให้คะแนน 1 ถึง 5 หัวใจ">
-            <button data-value="1" aria-label="1 หัวใจ">♡</button><button data-value="2" aria-label="2 หัวใจ">♡</button><button data-value="3" aria-label="3 หัวใจ">♡</button><button data-value="4" aria-label="4 หัวใจ">♡</button><button data-value="5" aria-label="5 หัวใจ">♡</button>
-          </div>
-          <p id="rating-hint" class="rating-hint">แตะหัวใจได้เลย</p>
-          <button id="next" class="primary hidden">ข้อต่อไป <span>→</span></button>
+          <label class="sr-only" for="answer">คำตอบของยู</label>
+          <textarea id="answer" rows="5" maxlength="300" placeholder="ยูเขียนคำตอบตรงนี้ได้เลย…"></textarea>
+          <div class="answer-footer"><span id="char-count">0 / 300</span><button id="answer-done" class="primary">ข้อต่อไป →</button></div>
         </div>
       </article>
       <p class="cat-tip">🐾 แมวบอกว่า: ค่อย ๆ ตอบ ไม่ต้องรีบนะ</p>
@@ -70,9 +61,9 @@
     <section id="result" class="screen result-screen">
       <div class="result-cat">ฅ(˶ᵔ ᵕ ᵔ˶)ฅ</div>
       <p class="eyebrow">BALLOON'S LITTLE HEART NOTE</p>
-      <h2><span id="result-score">0</span><small> / 50 หัวใจ</small></h2>
-      <h3 id="result-title">แมวเก็บทุกคำตอบไว้แล้ว</h3>
-      <p>คะแนนเป็นแค่ของแถม คำตอบของ Balloon ต่างหากที่น่ารักที่สุด</p>
+      <h2>9<small> / 9 คำตอบ</small></h2>
+      <h3 id="result-title">แมวเก็บทุกคำตอบของยูไว้แล้ว</h3>
+      <p>ขอบคุณที่ยอมให้แมวรู้จักยูมากขึ้นนะ</p>
       <div id="answer-list" class="answer-list"></div>
       <div class="result-actions"><button id="again" class="primary">เล่นอีกครั้ง</button><button id="copy" class="secondary">คัดลอกสรุป</button></div>
     </section>
